@@ -13,8 +13,14 @@ const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector<HTMLCanvasElement>('#background')!,
 });
 
+const canvasWidth = window.innerWidth / 2;
+const canvasHeight = window.innerHeight;
+
+renderer.setClearColor(0x0a0a0a);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(canvasWidth, canvasHeight);
+camera.aspect = canvasWidth / canvasHeight;
+camera.updateProjectionMatrix();
 camera.position.setZ(30);
 
 renderer.render(scene, camera);
@@ -26,17 +32,19 @@ renderer.render(scene, camera);
 // const geometry = new THREE.PlaneGeometry( 50, 50, 60, 60 );
 const geometry = new THREE.BoxGeometry( 15, 15, 15, 30, 30, 30 );
 const material = new THREE.PointsMaterial({
-        size: 0.02,
-        sizeAttenuation: true
+        size: 0.1,
+        sizeAttenuation: true,
+        color: 0x909090,
+        
     });
 const cube = new THREE.Points( geometry, material );
-scene.add( cube );
 
 // salva posições e normais originais
 const originalPositions = geometry.attributes.position.array.slice();
 const normals = geometry.attributes.normal.array;
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableZoom = false;
 
 // cada ripple guarda o ponto 3D de origem
 const ripples: { x: number; y: number; z: number; time: number }[] = [];
@@ -49,12 +57,15 @@ const hitCube = new THREE.Mesh(
     new THREE.BoxGeometry(15, 15, 15),
     new THREE.MeshBasicMaterial({ visible: false })
 );
-scene.add(hitCube);
+const cubeGroup = new THREE.Group();
+cubeGroup.add(cube);
+cubeGroup.add(hitCube);
+scene.add(cubeGroup);
 
 renderer.domElement.addEventListener('click', (event) => {
-    // normalização das coordenadas do mouse
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(hitCube);
@@ -99,12 +110,9 @@ function animate() {
     }
     geometry.attributes.position.needsUpdate = true;
 
-    cube.rotation.x += 0.0008;
-    cube.rotation.y += 0.0002;
-    cube.rotation.z += 0.0008;
-    hitCube.rotation.x +=0.0008;
-    hitCube.rotation.y +=0.0002; 
-    hitCube.rotation.z +=0.0008;
+    cubeGroup.rotation.x += 0.0008;
+    cubeGroup.rotation.y += 0.0002;
+    cubeGroup.rotation.z += 0.0008;
     controls.update();
     renderer.render(scene, camera);
 }

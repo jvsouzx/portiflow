@@ -1,5 +1,117 @@
-canvas {
+:root {
+  --bg: #0a0a0a;
+  --text: #f0f0f0;
+  --muted: #888;
+  --accent: #fff;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--text);
+  background: var(--bg);
+  margin: 0;
+}
+
+/* Navbar */
+nav {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 5%;
+}
+
+.nav-logo {
+  font-family: "Bitcount Grid Single", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #909090;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  font-family: "Merriweather", sans-serif;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+}
+
+/* Sections */
+section {
+  scroll-snap-align: start;
+}
+
+#hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  flex: 1;
+  padding-left: 5%;
+}
+
+.hero-content h1 {
+  font-family: "Bitcount Grid Single", sans-serif;
+  font-size: 6rem;
+  font-weight: 370;
+  letter-spacing: 0.08em;
+  color: #909090;
+  margin-top: -3rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-content p {
+  font-family: "Merriweather", sans-serif;
+  color: #6b6b6b;
+  margin-bottom: 2rem;
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.social-icons a {
+  color: var(--muted);
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: var(--text);
+}
+
+canvas {
+  flex-shrink: 0;
+}
+
+#projects {
+  position: relative;
+  z-index: 1;
+  background: var(--muted);
+  /* border-radius: 16px 16px 16px 16px; */
+  min-height: 100vh;
 }
