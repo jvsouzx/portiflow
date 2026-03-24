@@ -10,15 +10,16 @@
     <title>JVGS</title>
   </head>
   <body>
-    <nav>
+    <nav data-theme="dark">
       <div class="nav-logo">JV</div>
       <ul class="nav-links">
-        <li><a href="#hero">ABOUT</a></li>
+        <li><a href="#hero">MAIN</a></li>      
         <li><a href="#projects">PROJECTS</a></li>
+        <li><a href="#about">ABOUT</a></li>
       </ul>
     </nav>
     <main>
-      <section id="hero">
+      <section id="hero" data-nav-theme="dark">
         <div class="hero-content">
           <h1>Jorge Vitor Gonçalves</h1>
           <p>Fullstack Developer @ Bytewer</p>
@@ -32,7 +33,9 @@
         </div>
         <canvas id="background"></canvas>
       </section>
-      <section id="projects">
+      <section id="projects" data-nav-theme="light">
+      </section>
+      <section id="about" data-nav-theme="dark">
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>

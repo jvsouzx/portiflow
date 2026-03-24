@@ -30,14 +30,14 @@ renderer.render(scene, camera);
 
 // creating a object
 // const geometry = new THREE.PlaneGeometry( 50, 50, 60, 60 );
-const geometry = new THREE.BoxGeometry( 15, 15, 15, 30, 30, 30 );
+const geometry = new THREE.BoxGeometry(15, 15, 15, 30, 30, 30);
 const material = new THREE.PointsMaterial({
-        size: 0.1,
-        sizeAttenuation: true,
-        color: 0x909090,
-        
-    });
-const cube = new THREE.Points( geometry, material );
+    size: 0.1,
+    sizeAttenuation: true,
+    color: 0x909090,
+
+});
+const cube = new THREE.Points(geometry, material);
 
 // salva posições e normais originais
 const originalPositions = geometry.attributes.position.array.slice();
@@ -118,3 +118,24 @@ function animate() {
 }
 
 animate()
+
+// observer logic
+// Muda o tema do nav de acordo com a seção visível.
+//
+// threshold: 0.5 → dispara quando 50% da seção entra/sai da viewport.
+
+const navbar = document.querySelector('nav')!;
+const sections = document.querySelectorAll<HTMLElement>('section[data-nav-theme]');
+
+const navObserver = new IntersectionObserver(
+    (entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                navbar.dataset.theme = (entry.target as HTMLElement).dataset.navTheme!;
+            }
+        });
+    },
+    { threshold: 0.5 }
+);
+
+sections.forEach((section) => navObserver.observe(section));

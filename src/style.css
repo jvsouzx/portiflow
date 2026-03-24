@@ -34,6 +34,20 @@ nav {
   font-size: 1.8rem;
   font-weight: 600;
   color: #909090;
+  transition: color 0.3s;
+}
+
+/* Nav theme: quando o nav está sobre seção com fundo claro */
+nav[data-theme="light"] .nav-logo {
+  color: #1a1a1a;
+}
+
+nav[data-theme="light"] .nav-links a {
+  color: #444;
+}
+
+nav[data-theme="light"] .nav-links a:hover {
+  color: #1a1a1a;
 }
 
 .nav-links {
@@ -113,5 +127,12 @@ canvas {
   z-index: 1;
   background: var(--muted);
   /* border-radius: 16px 16px 16px 16px; */
+  min-height: 100vh;
+}
+
+#about {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
   min-height: 100vh;
 }
