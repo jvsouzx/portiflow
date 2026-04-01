@@ -1,8 +1,9 @@
 :root {
-  --bg: #0a0a0a;
-  --text: #f0f0f0;
-  --muted: #888;
-  --accent: #fff;
+  --bg: #1a1410;
+  --bg-light: #2a2118;
+  --text: #e8ddd0;
+  --muted: #a08c7a;
+  --accent: #c4a882;
 }
 
 html {
@@ -33,21 +34,21 @@ nav {
   font-family: "Bitcount Grid Single", sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
-  color: #909090;
+  color: var(--muted);
   transition: color 0.3s;
 }
 
 /* Nav theme: quando o nav está sobre seção com fundo claro */
 nav[data-theme="light"] .nav-logo {
-  color: #1a1a1a;
+  color: #2a2118;
 }
 
 nav[data-theme="light"] .nav-links a {
-  color: #444;
+  color: #5c4a3a;
 }
 
 nav[data-theme="light"] .nav-links a:hover {
-  color: #1a1a1a;
+  color: #2a2118;
 }
 
 .nav-links {
@@ -92,14 +93,14 @@ section {
   font-size: 6rem;
   font-weight: 370;
   letter-spacing: 0.08em;
-  color: #909090;
+  color: var(--accent);
   margin-top: -3rem;
   margin-bottom: 0.5rem;
 }
 
 .hero-content p {
   font-family: "Merriweather", sans-serif;
-  color: #6b6b6b;
+  color: var(--muted);
   margin-bottom: 2rem;
 }
 
@@ -125,14 +126,86 @@ canvas {
 #projects {
   position: relative;
   z-index: 1;
-  background: var(--muted);
-  /* border-radius: 16px 16px 16px 16px; */
+  background: var(--bg);
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 5%;
+  box-sizing: border-box;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  width: 100%;
+}
+
+.project-card {
+  background: var(--bg-light);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+}
+
+.project-image {
+  width: 100%;
+  height: 250px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.project-info {
+  padding: 1.5rem;
+}
+
+.project-info h3 {
+  font-family: "Merriweather", sans-serif;
+  font-size: 1.2rem;
+  color: var(--text);
+  margin: 0 0 0.75rem 0;
+}
+
+.project-info p {
+  font-family: "Merriweather", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
 }
 
 #about {
   position: relative;
   z-index: 1;
-  background: var(--bg);
+  background: var(--accent);
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-content {
+  max-width: 600px;
+  text-align: center;
+  padding: 2rem;
+  color: var(--bg);
+  font-family: "Merriweather", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  line-height: 1.8;
 }

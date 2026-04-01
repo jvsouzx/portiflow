@@ -1,6 +1,9 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 // A cena (scene) é como um container que armazena objetos, câmeras e iluminaçõa
 const scene = new THREE.Scene();
@@ -16,7 +19,7 @@ const renderer = new THREE.WebGLRenderer({
 const canvasWidth = window.innerWidth / 2;
 const canvasHeight = window.innerHeight;
 
-renderer.setClearColor(0x0a0a0a);
+renderer.setClearColor(0x1a1410);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(canvasWidth, canvasHeight);
 camera.aspect = canvasWidth / canvasHeight;
@@ -34,7 +37,7 @@ const geometry = new THREE.BoxGeometry(15, 15, 15, 30, 30, 30);
 const material = new THREE.PointsMaterial({
     size: 0.1,
     sizeAttenuation: true,
-    color: 0x909090,
+    color: 0xa08c7a,
 
 });
 const cube = new THREE.Points(geometry, material);
@@ -45,6 +48,7 @@ const normals = geometry.attributes.normal.array;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableZoom = false;
+controls.enablePan = false;
 
 // cada ripple guarda o ponto 3D de origem
 const ripples: { x: number; y: number; z: number; time: number }[] = [];
@@ -118,6 +122,42 @@ function animate() {
 }
 
 animate()
+
+// Project card mini cubes (fat edges, static)
+function makeEdges(geo: THREE.BufferGeometry): LineSegments2 {
+    const edges = new THREE.EdgesGeometry(geo);
+    const positions = edges.attributes.position.array as Float32Array;
+    const lGeo = new LineSegmentsGeometry().setPositions(positions);
+    const lMat = new LineMaterial({ color: 0x2a2118, linewidth: 3 });
+    lMat.resolution.set(window.innerWidth, window.innerHeight);
+    return new LineSegments2(lGeo, lMat);
+}
+
+const cardVariants = [
+    () => makeEdges(new THREE.BoxGeometry(3, 3, 3)),
+    () => makeEdges(new THREE.IcosahedronGeometry(2.2, 0)),
+    () => makeEdges(new THREE.DodecahedronGeometry(2.2, 0)),
+    () => makeEdges(new THREE.OctahedronGeometry(2.5, 0)),
+];
+
+document.querySelectorAll<HTMLCanvasElement>('.project-canvas').forEach((canvas) => {
+    const variant = parseInt(canvas.dataset.variant || '0');
+    const s = new THREE.Scene();
+    const c = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+    c.position.z = 7;
+
+    const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    r.setClearColor(0xc4a882);
+    r.setPixelRatio(window.devicePixelRatio);
+    r.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    const mesh = cardVariants[variant]();
+    mesh.rotation.x = 0.4;
+    mesh.rotation.y = 0.6 + variant * 0.5;
+    s.add(mesh);
+
+    r.render(s, c);
+});
 
 // observer logic
 // Muda o tema do nav de acordo com a seção visível.
