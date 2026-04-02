@@ -16,14 +16,13 @@ const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector<HTMLCanvasElement>('#background')!,
 });
 
-const canvasWidth = window.innerWidth / 2;
-const canvasHeight = window.innerHeight;
-
+const canvas = renderer.domElement;
 renderer.setClearColor(0x1a1410);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(canvasWidth, canvasHeight);
-camera.aspect = canvasWidth / canvasHeight;
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+camera.aspect = canvas.clientWidth / canvas.clientHeight;
 camera.updateProjectionMatrix();
+
 camera.position.setZ(30);
 
 renderer.render(scene, camera);
@@ -156,7 +155,12 @@ document.querySelectorAll<HTMLCanvasElement>('.project-canvas').forEach((canvas)
     mesh.rotation.y = 0.6 + variant * 0.5;
     s.add(mesh);
 
-    r.render(s, c);
+    function animateCard() {
+        requestAnimationFrame(animateCard);
+        mesh.rotation.y += 0.005;
+        r.render(s, c);
+    }
+    animateCard();
 });
 
 // observer logic
@@ -179,3 +183,26 @@ const navObserver = new IntersectionObserver(
 );
 
 sections.forEach((section) => navObserver.observe(section));
+
+const navToggle = document.querySelector('.nav-toggle')!;
+const navLinks = document.querySelector('.nav-links')!;
+
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});
+
+navLinks.querySelectorAll('a').forEach((link) => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+  });
+});
+
+window.addEventListener('resize', () => {
+  const canvas = renderer.domElement;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+
+  renderer.setSize(width, height, false);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+});
