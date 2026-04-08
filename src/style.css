@@ -236,20 +236,27 @@ canvas {
   height: 100%;
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
+  nav {
+    flex-direction: row-reverse;
+  }
+
   .projects-grid{
     grid-template-columns: 1fr;
   }
 
   #hero {
     flex-direction: column;
+    justify-content: center;
     height: 100vh;
     overflow: hidden;
+    gap: 1rem;
   }
 
   .hero-content {
+    flex: none;
     text-align: center;
-    padding: 9rem 5% 1rem;
+    padding: 4rem 5% 0;
   }
 
   .social-icons {
@@ -258,7 +265,8 @@ canvas {
 
   #background {
     width: 100%;
-    flex: 1;
+    flex: none;
+    height: 40vh;
   }
 
   .nav-toggle {
@@ -268,7 +276,7 @@ canvas {
   .nav-links {
     position: fixed;
     top: 0;
-    right: -100%;
+    left: -100%;
     width: 60%;
     height: 100vh;
     background: var(--bg);
@@ -276,10 +284,10 @@ canvas {
     align-items: center;
     justify-content: center;
     gap: 2rem;
-    transition: right 0.3s;
+    transition: left 0.3s ease;
   }
 
   .nav-links.active {
-    right: 0;
+    left: 0;
   }
 }
