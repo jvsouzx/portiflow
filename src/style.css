@@ -1,9 +1,10 @@
 :root {
-  --bg: #1a1410;
-  --bg-light: #2a2118;
-  --text: #e8ddd0;
-  --muted: #a08c7a;
-  --accent: #c4a882;
+  --bg: #0a0f1a;
+  --bg-light: #131b2e;
+  --text: #c5d0dc;
+  --muted: #6b8aad;
+  --accent: #4a7a9e;
+  --ice: #e8f1fa;
 }
 
 html {
@@ -40,15 +41,15 @@ nav {
 
 /* Nav theme: quando o nav está sobre seção com fundo claro */
 nav[data-theme="light"] .nav-logo {
-  color: #2a2118;
+  color: #131b2e;
 }
 
 nav[data-theme="light"] .nav-links a {
-  color: #5c4a3a;
+  color: #2a3f5c;
 }
 
 nav[data-theme="light"] .nav-links a:hover {
-  color: #2a2118;
+  color: #131b2e;
 }
 
 .nav-links {
@@ -69,7 +70,7 @@ nav[data-theme="light"] .nav-links a:hover {
 }
 
 .nav-links a:hover {
-  color: var(--text);
+  color: var(--ice);
 }
 
 /* Sections */
@@ -93,7 +94,7 @@ section {
   font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 370;
   letter-spacing: 0.08em;
-  color: var(--accent);
+  color: var(--ice);
   margin-top: -3rem;
   margin-bottom: 0.5rem;
 }
@@ -116,7 +117,7 @@ section {
 }
 
 .social-icons a:hover {
-  color: var(--text);
+  color: var(--ice);
 }
 
 canvas {
@@ -176,7 +177,7 @@ canvas {
 .project-info h3 {
   font-family: "Merriweather", sans-serif;
   font-size: 1.2rem;
-  color: var(--text);
+  color: var(--ice);
   margin: 0 0 0.75rem 0;
 }
 

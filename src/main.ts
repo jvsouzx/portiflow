@@ -17,7 +17,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 const canvas = renderer.domElement;
-renderer.setClearColor(0x1a1410);
+renderer.setClearColor(0x0a0f1a);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -36,7 +36,7 @@ const geometry = new THREE.BoxGeometry(15, 15, 15, 30, 30, 30);
 const material = new THREE.PointsMaterial({
     size: 0.1,
     sizeAttenuation: true,
-    color: 0xa08c7a,
+    color: 0x6b8aad,
 
 });
 const cube = new THREE.Points(geometry, material);
@@ -127,7 +127,7 @@ function makeEdges(geo: THREE.BufferGeometry): LineSegments2 {
     const edges = new THREE.EdgesGeometry(geo);
     const positions = edges.attributes.position.array as Float32Array;
     const lGeo = new LineSegmentsGeometry().setPositions(positions);
-    const lMat = new LineMaterial({ color: 0x2a2118, linewidth: 3 });
+    const lMat = new LineMaterial({ color: 0x131b2e, linewidth: 3 });
     lMat.resolution.set(window.innerWidth, window.innerHeight);
     return new LineSegments2(lGeo, lMat);
 }
@@ -146,7 +146,7 @@ document.querySelectorAll<HTMLCanvasElement>('.project-canvas').forEach((canvas)
     c.position.z = 7;
 
     const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    r.setClearColor(0xc4a882);
+    r.setClearColor(0x4a7a9e);
     r.setPixelRatio(window.devicePixelRatio);
     r.setSize(canvas.clientWidth, canvas.clientHeight);
 
