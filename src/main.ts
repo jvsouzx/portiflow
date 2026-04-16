@@ -208,11 +208,29 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-let counter = 1;
+const modal = document.getElementById('projectModal')!;
+const modalTitle = modal.querySelector('.modal-title')!;
+const modalBody = modal.querySelector('.modal-body')!;
 
 document.addEventListener('click', (e) => {
   const card = (e.target as HTMLElement).closest('.project-card');
   if (!card) return;
-  console.log("Clicou " + counter + " vezes!");
-  counter += 1;
+
+  const title = card.querySelector('.project-info h3')?.textContent || '';
+  const details = card.querySelector('.project-details');
+  if (!details) return;
+
+  modalTitle.textContent = title;
+  modalBody.innerHTML = details.innerHTML;
+  modal.classList.add('active');
+});
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal || (e.target as HTMLElement).closest('.modal-close')) {
+    modal.classList.remove('active');
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') modal.classList.remove('active');
 });

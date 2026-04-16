@@ -190,6 +190,71 @@ canvas {
   margin: 0;
 }
 
+.project-details {
+  display: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg-light);
+  border-radius: 12px;
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--ice);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-title {
+  font-family: "Merriweather", sans-serif;
+  font-size: 1.5rem;
+  color: var(--ice);
+  margin: 0 0 1rem 0;
+}
+
+.modal-body {
+  font-family: "Merriweather", sans-serif;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 #about {
   position: relative;
   z-index: 1;
