@@ -14,10 +14,11 @@ const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerH
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector<HTMLCanvasElement>('#background')!,
+    alpha: true,
 });
 
 const canvas = renderer.domElement;
-renderer.setClearColor(0x0a0f1a);
+renderer.setClearColor(0x000000, 0);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -205,4 +206,13 @@ window.addEventListener('resize', () => {
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+});
+
+let counter = 1;
+
+document.addEventListener('click', (e) => {
+  const card = (e.target as HTMLElement).closest('.project-card');
+  if (!card) return;
+  console.log("Clicou " + counter + " vezes!");
+  counter += 1;
 });

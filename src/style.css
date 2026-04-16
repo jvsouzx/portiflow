@@ -82,6 +82,7 @@ section {
   height: 100vh;
   display: flex;
   align-items: center;
+  background: linear-gradient(to top right, #0a0f1a, #101b30, #152540, #1a2a4a);
 }
 
 .hero-content {
@@ -251,6 +252,7 @@ canvas {
     height: 100vh;
     overflow: hidden;
     gap: 1rem;
+    background: linear-gradient(to top right, #0a0f1a, #101b30, #152540, #1a2a4a);
   }
 
   .hero-content {
