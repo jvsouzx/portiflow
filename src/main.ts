@@ -4,41 +4,37 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { renderContributions } from './contributions';
 
-// A cena (scene) é como um container que armazena objetos, câmeras e iluminaçõa
+// Cria um sólido apenas com arestas (sem faces), com linhas de espessura real.
+// LineSegments2 é necessário porque linhas nativas do WebGL têm sempre 1px.
+function makeEdges(geo: THREE.BufferGeometry, color: number, linewidth: number): LineSegments2 {
+    const edges = new THREE.EdgesGeometry(geo);
+    const positions = edges.attributes.position.array as Float32Array;
+    const lGeo = new LineSegmentsGeometry().setPositions(positions);
+    const lMat = new LineMaterial({ color, linewidth });
+    lMat.resolution.set(window.innerWidth, window.innerHeight);
+    return new LineSegments2(lGeo, lMat);
+}
+
+// Hero: cubo pontilhado com ondulação ao clicar
 const scene = new THREE.Scene();
-
-// A camera é o que permite visulizar o conteúdo das cenas, o three.js tem várias cameras 
-// o mais comum é utilizar a perpective camera que simula o comportamento do olhar humano
-const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(80, 1, 0.1, 1000);
+camera.position.setZ(30);
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector<HTMLCanvasElement>('#background')!,
     alpha: true,
+    antialias: true,
 });
-
-const canvas = renderer.domElement;
 renderer.setClearColor(0x000000, 0);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-camera.aspect = canvas.clientWidth / canvas.clientHeight;
-camera.updateProjectionMatrix();
 
-camera.position.setZ(30);
-
-renderer.render(scene, camera);
-
-// const gridHelper = new THREE.GridHelper(200, 50)
-// scene.add(gridHelper)
-
-// creating a object
-// const geometry = new THREE.PlaneGeometry( 50, 50, 60, 60 );
 const geometry = new THREE.BoxGeometry(15, 15, 15, 30, 30, 30);
 const material = new THREE.PointsMaterial({
     size: 0.1,
     sizeAttenuation: true,
     color: 0x6b8aad,
-
 });
 const cube = new THREE.Points(geometry, material);
 
@@ -49,6 +45,18 @@ const normals = geometry.attributes.normal.array;
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableZoom = false;
 controls.enablePan = false;
+
+function resizeHero() {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+}
+resizeHero();
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // cada ripple guarda o ponto 3D de origem
 const ripples: { x: number; y: number; z: number; time: number }[] = [];
@@ -114,30 +122,24 @@ function animate() {
     }
     geometry.attributes.position.needsUpdate = true;
 
-    cubeGroup.rotation.x += 0.0008;
-    cubeGroup.rotation.y += 0.0002;
-    cubeGroup.rotation.z += 0.0008;
+    if (!reduceMotion) {
+        cubeGroup.rotation.x += 0.0008;
+        cubeGroup.rotation.y += 0.0002;
+        cubeGroup.rotation.z += 0.0008;
+    }
     controls.update();
     renderer.render(scene, camera);
 }
+animate();
 
-animate()
+window.addEventListener('resize', resizeHero);
 
-// Project card mini cubes (fat edges, static)
-function makeEdges(geo: THREE.BufferGeometry): LineSegments2 {
-    const edges = new THREE.EdgesGeometry(geo);
-    const positions = edges.attributes.position.array as Float32Array;
-    const lGeo = new LineSegmentsGeometry().setPositions(positions);
-    const lMat = new LineMaterial({ color: 0x131b2e, linewidth: 3 });
-    lMat.resolution.set(window.innerWidth, window.innerHeight);
-    return new LineSegments2(lGeo, lMat);
-}
-
+// Project card mini solids (static camera, rotating mesh)
 const cardVariants = [
-    () => makeEdges(new THREE.BoxGeometry(3, 3, 3)),
-    () => makeEdges(new THREE.IcosahedronGeometry(2.2, 0)),
-    () => makeEdges(new THREE.DodecahedronGeometry(2.2, 0)),
-    () => makeEdges(new THREE.OctahedronGeometry(2.5, 0)),
+    () => makeEdges(new THREE.BoxGeometry(3, 3, 3), 0x131b2e, 3),
+    () => makeEdges(new THREE.IcosahedronGeometry(2.2, 0), 0x131b2e, 3),
+    () => makeEdges(new THREE.DodecahedronGeometry(2.2, 0), 0x131b2e, 3),
+    () => makeEdges(new THREE.OctahedronGeometry(2.5, 0), 0x131b2e, 3),
 ];
 
 document.querySelectorAll<HTMLCanvasElement>('.project-canvas').forEach((canvas) => {
@@ -158,17 +160,13 @@ document.querySelectorAll<HTMLCanvasElement>('.project-canvas').forEach((canvas)
 
     function animateCard() {
         requestAnimationFrame(animateCard);
-        mesh.rotation.y += 0.005;
+        if (!reduceMotion) mesh.rotation.y += 0.005;
         r.render(s, c);
     }
     animateCard();
 });
 
-// observer logic
 // Muda o tema do nav de acordo com a seção visível.
-//
-// threshold: 0.5 → dispara quando 50% da seção entra/sai da viewport.
-
 const navbar = document.querySelector('nav')!;
 const sections = document.querySelectorAll<HTMLElement>('section[data-nav-theme]');
 
@@ -189,48 +187,44 @@ const navToggle = document.querySelector('.nav-toggle')!;
 const navLinks = document.querySelector('.nav-links')!;
 
 navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
+    navLinks.classList.toggle('active');
 });
 
 navLinks.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('active');
-  });
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+    });
 });
 
-window.addEventListener('resize', () => {
-  const canvas = renderer.domElement;
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-
-  renderer.setSize(width, height, false);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-});
-
+// Modal de detalhes dos projetos
 const modal = document.getElementById('projectModal')!;
 const modalTitle = modal.querySelector('.modal-title')!;
 const modalBody = modal.querySelector('.modal-body')!;
 
 document.addEventListener('click', (e) => {
-  const card = (e.target as HTMLElement).closest('.project-card');
-  if (!card) return;
+    const card = (e.target as HTMLElement).closest('.project-card');
+    if (!card) return;
 
-  const title = card.querySelector('.project-info h3')?.textContent || '';
-  const details = card.querySelector('.project-details');
-  if (!details) return;
+    const title = card.querySelector('.project-info h3')?.textContent || '';
+    const details = card.querySelector('.project-details');
+    if (!details) return;
 
-  modalTitle.textContent = title;
-  modalBody.innerHTML = details.innerHTML;
-  modal.classList.add('active');
+    modalTitle.textContent = title;
+    modalBody.innerHTML = details.innerHTML;
+    modal.classList.add('active');
 });
 
 modal.addEventListener('click', (e) => {
-  if (e.target === modal || (e.target as HTMLElement).closest('.modal-close')) {
-    modal.classList.remove('active');
-  }
+    if (e.target === modal || (e.target as HTMLElement).closest('.modal-close')) {
+        modal.classList.remove('active');
+    }
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') modal.classList.remove('active');
+    if (e.key === 'Escape') modal.classList.remove('active');
 });
+
+// Gráfico de contribuições (dados gerados pela GitHub Action)
+renderContributions();
+
+document.getElementById('year')!.textContent = String(new Date().getFullYear());
